@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news/blocs/newsBloc.dart';
 import 'package:news/models/newsModels.dart';
+import 'package:news/ui/detail.dart';
 
 class Home extends StatefulWidget {
   final Widget child;
@@ -30,7 +31,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blue,
+        title: Text("Berita"),
       ),
       body: StreamBuilder(
         stream: bloc.allNews,
@@ -54,15 +56,28 @@ Widget newsList(AsyncSnapshot<Berita> snapshot) {
     padding: const EdgeInsets.all(15.0),
     itemCount: snapshot.data.articles.length,
     itemBuilder: (BuildContext context, int index) {
-      return ListTile(
-        contentPadding: const EdgeInsets.all(8.0),
-        leading: Image.network(
-          snapshot.data.articles[index].urlToImage,
-          width: 100,
-          height: 100,
+      return InkWell(
+        onTap: () {
+          print(snapshot.data.articles[index].url);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Detail(
+                        urlb: snapshot.data.articles[index].url,
+                        titleb: snapshot.data.articles[index].title,
+                      )));
+          //Navigator.of(context).pushNamed('/detail');
+        },
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(8.0),
+          leading: Image.network(
+            snapshot.data.articles[index].urlToImage,
+            width: 100,
+            height: 100,
+          ),
+          title: Text(snapshot.data.articles[index].title),
+          subtitle: Text(snapshot.data.articles[index].description),
         ),
-        title: Text(snapshot.data.articles[index].title),
-        subtitle: Text(snapshot.data.articles[index].description),
       );
     },
   );
